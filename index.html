@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
+    
+    <title>Simple Form!</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>PactSafe Example with a Form</h1>
+    
+      <form id="myPageForm">
+        <div class="form-group">
+          <label for="nari-clickwrap-test-user-elem">Email address</label>
+          <input type="email" class="form-control" id="nari-clickwrap-test-user-elem" />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" />
+        </div>
+    
+      <!-- Note the div container here! -->
+      <div id="nari-clickwrap-test-html-elem"></div>
+    
+      <!-- By default, the submit button is disabled for validation with JavaScript -->
+      <button id="formSubmitButton" type="submit" class="btn btn-primary" disabled>Submit</button>
+      </form>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
+    
+    <!-- PactSafe Implementation -->
+    <script>
+    // Minified PactSafe Snippet
+    (function(w,d,s,c,f,n,t,g,a,b,l){w["PactSafeObject"]=n;w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)},w[n].on=function(){(w[n].e=w[n].e||[]).push(arguments)},w[n].once=function(){(w[n].eo=w[n].eo||[]).push(arguments)},w[n].off=function(){(w[n].o=w[n].o||[]).push(arguments)},w[n].t=1*new Date(),w[n].l=0;a=d.createElement(s);b=d.getElementsByTagName(s)[0];a.async=1;a.src=c;a.onload=a.onreadystatechange=function(){w[n].l=1};a.onerror=a.onabort=function(){w[n].l=0};b.parentNode.insertBefore(a,b);setTimeout(function(){if(!w[n].l&&!w[n].loaded){w[n].error=1;a=d.createElement(s);a.async=1;a.src=f;a.onload=a.onreadystatechange=function(){w[n].l=1};a.onerror=a.onabort=function(){w[n].l=0};b.parentNode.insertBefore(a,b);l=function(u,e){try{e=d.createElement("img");e.src="https://d3r8bdci515tjv.cloudfront.net/error.gif?t="+w[n].t+"&u="+encodeURIComponent(u);d.getElementsByTagName("body")[0].appendChild(e)}catch(x){}};l(c);setTimeout(function(){if(!w[n].l&&!w[n].loaded){w[n].error=1;if(g&&"function"==typeof g){g.call(this);}l(f)}},t)}},t)})(window,document,"script","https://vault.perf.pactsafe.io/ps.min.js","https://d1ppi9a32zrq4d.cloudfront.net/ps.min.js","_ps",5000,function(){window.console&&console.error&&console.error("Unable to load PactSafe JS Library.")});
+    
+    // _ps("create", "ed4c17a2-4475-4a1f-91a8-92b0544d07bf");
+    //_ps("load", "embedded-6b8mftx3", { container_selector: "nari-clickwrap-test-html-elem", signer_id_selector: "nari-clickwrap-test-user-elem" }); 
+
+    // We'll need a couple of things to get started from PactSafe.
+    var siteAccessId = 'ed4c17a2-4475-4a1f-91a8-92b0544d07bf'; // A PactSafe Site Access ID
+    var groupKey = "embedded-6b8mftx3"; // A PactSafe Group Key.
+  
+    // Creates a Site object with the a PactSafe Site Access ID.
+    _ps('create', siteAccessId, {
+      disable_sending: true // Disable automatic sending with the JavaScript snippet.
+    });
+  
+    // Since we're testing, we can enable debugging
+    // which will log events to console. You'll want to
+    // set this to false in a production environment.
+    _ps.debug = true;
+  
+    // Options set on the PactSafe Group.
+    var groupOptions = {
+      container_selector: 'nari-clickwrap-test-html-elem', // ID of where we want the clickwrap to load in the page.
+      display_all: true, // Always display the contracts, even if previously signed by the Signer.
+      signer_id_selector: 'nari-clickwrap-test-user-elem', // Uses the email input field value as the Signer ID and listen to the field.
+      test_mode: true, // Allows you to clear test data from the PactSafe web app.
+    }
+  
+    // Load a Clickwrap group into the page.
+    _ps('load', groupKey, groupOptions);
+  
+    // If there's an error from the PactSafe snippet,
+    // you may want to prevent submission if needed.
+    _ps.on('error', function(message, event_type, context) {
+      // Handle any errors.
+      console.log(message);
+    });
+      
+    /**
+     * _ps.on('valid') gets triggered when all contracts within a group
+     * have been accepted.
+     *
+     * Since the user has agreed, we can enable the submit button
+     * if basic form validation also passes.
+     *
+     * Note: if more than one PactSafe group exists on the page,
+     * you'll want to add additional validation to ensure both groups
+     * are valid.
+     */
+    _ps.on('valid', function(params, context) {
+      console.log('Valid event fired!');
+      if (simpleValidationFormValues()) {
+        console.log("Validated form values ...")
+        var submitButton = pageSubmitButton();
+        if (submitButton) submitButton.disabled = false; // Only enable the submit button if found.
+      }
+    });
+    
+    // Check if values exist within the form fields.
+    function simpleValidationFormValues() {
+      var emailField = document.getElementById('nari-clickwrap-test-user-elem');
+      var passwordField = document.getElementById('exampleInputPassword1');
+      return (emailField !== "" && passwordField !== "");
+    }
+  
+    // Return the form element in the page when called.
+    function pageFormElement() {
+      return document.getElementById('myPageForm');
+    }
+      
+    // Return the submit button in the page when called.
+    function pageSubmitButton() {
+      return document.getElementById('formSubmitButton');
+    }
+  
+    // Return whether to block the submission or not.
+    function blockSubmission() {
+      // Check to ensure we're able to get the Group successfully.
+      if (_ps.getByKey(groupKey)) {
+      
+        // Return if we should block the submission using the .block() method.
+        return _ps.getByKey(groupKey).block();
+      } else {
+        // We weren't able to get the group, so blocking form submission may be needed.
+        return true;
+      }
+    }
+  
+    /**
+      * Here, we add some basic form validation and then manually
+      * send acceptance using the JavaScript snippet. We utilize a
+      * callback to wait and ensure acceptance has been sent to PactSafe
+      * before allowing the form to submit.
+      */
+    function handleFormSubmit(event) {
+      // Prevent the form from automatically submitting without checking PactSafe acceptance first.
+      event.preventDefault();
+      
+      // Simple validation to ensure form fields have values.
+      var formFieldsHaveValues = simpleValidationFormValues();
+      if (!formFieldsHaveValues) {
+        alert('Please ensure all fields are filled out!');
+        return false;
+      }
+      
+      // Check to ensure that the acceptance is still valid on the
+      // PactSafe group as a precaution.
+      var shouldBlockSubmission = blockSubmission();
+      if (shouldBlockSubmission) {
+        // We can get the alert message if set on the group or define our own if it's not.
+        var acceptanceAlertLanguage = (_ps.getByKey(groupKey) && _ps.getByKey(groupKey).get('alert_message')) ?  _ps.getByKey(groupKey).get('alert_message') :  'Please accept our Terms and Conditions.'
+  
+        alert(acceptanceAlertLanguage); // Alert the user that the Terms need to be accepted before continuing.
+        return false; // Prevent submission
+      }
+      
+      // We don't need to block the form submission at this point.
+      // Manually send acceptance with the PactSafe Group.
+      _ps(groupKey + ':send', 'agreed', {
+        disable_sending: false, // We have to revert to allow sending with the snippet here.
+        event_callback: function(err, eventType, group, request) {
+          if (err) {
+            // Something went wrong with sending the agreed event.
+            alert('Uh oh, something went wrong. Please try submitting again.'); // Alert the user
+            return false; // Prevent form submission due to error.
+          }
+          
+          // Since we had no errors, go ahead and submit the form.
+          var form = pageFormElement();
+          if (form) form.submit(); // Check we're able to retrieve the form.
+          return true;
+        }
+      });
+    }
+  
+    // We want to prevent the form submission
+    // unless acceptance has gone through.
+    function addFormAcceptanceValidation() {
+      var form = pageFormElement(); // Get the form element.
+      if (!form) return; // Return if no form is found in the page.
+      
+      // Add listener for form submissions.
+      form.addEventListener('submit', function(event) {
+        handleFormSubmit(event);
+      });
+    }
+  
+    // Set up validation of Terms before allowing form submission.
+    if (document.readyState === 'loading') {  // Loading hasn't finished yet
+      document.addEventListener('DOMContentLoaded', addFormAcceptanceValidation);
+    } else {  // `DOMContentLoaded` has already fired
+        addFormAcceptanceValidation();
+    }
+    </script>
+  </body>
+</html>
