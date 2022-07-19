@@ -50,7 +50,8 @@
   
     // Creates a Site object with the a PactSafe Site Access ID.
     _ps('create', siteAccessId, {
-      disable_sending: true // Disable automatic sending with the JavaScript snippet.
+      disable_sending: true, // Disable automatic sending with the JavaScript snippet.
+      dynamic: true
     });
   
     // Since we're testing, we can enable debugging
